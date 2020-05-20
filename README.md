@@ -5,7 +5,7 @@ A script that add batch attributes to object
 
 #### 1. install script
    add_arnold_attrs.py -> \maya\scripts
-   add_arnold_attrs.ui -> \maya\Qt_dev\ui
+   add_arnold_attrs.ui -> \maya\Qt_dev\ui 
    add_arnold_attrs_ui.py -> \maya\Qt_dev
 
 #### 2.  run script
