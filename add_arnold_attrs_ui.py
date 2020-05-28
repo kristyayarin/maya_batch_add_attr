@@ -65,8 +65,14 @@ def getMayaMainWindow():
 # c_mix_r_doubleSpinBox  c_mix_g_doubleSpinBox  c_mix_b_doubleSpinBox
 # c_man_r_doubleSpinBox  c_man_g_doubleSpinBox  c_man_b_doubleSpinBox
 #               
+#	label_16				path_lineEdit_2
+#				loop_checkBox_2
+#
 #               add_group_checkBox
 #               pushButton
+#				
+#				del_name_lineEdit_3
+#				pushButton_2
 #________________________________________________________
 
 class AddaDialog(QDialog):
@@ -100,6 +106,7 @@ class AddaDialog(QDialog):
 		self.ui.add_mode_comboBox.currentIndexChanged.connect(self.changeMode)
 		self.ui.data_type_comboBox.currentIndexChanged.connect(self.changeMode)
 		self.ui.pushButton.clicked.connect(self.doitAction)
+		self.ui.pushButton_2.clicked.connect(self.doieAction_2)
 	#________________________________________________
 	
 	def changeMode(self):
@@ -109,13 +116,25 @@ class AddaDialog(QDialog):
 			self.ui.min_max_checkBox.setEnabled(False)
 		else:
 			self.ui.min_max_checkBox.setEnabled(True)
+
+		if self.ui.data_type_comboBox.currentText() == 'file' :
+			self.ui.min_max_checkBox.setChecked(False)
+			self.ui.min_max_checkBox.setEnabled(False)
 		#------------------------------------------------
 		self.index = {
 			'color' : 0,
 			'float' : 1,
-			'int' : 2
+			'int' : 2,
+			'file' : 3
 		}
 		self.ui.data_type_stackedWidget.setCurrentIndex(self.index.get(self.ui.data_type_comboBox.currentText()))
+
+		#------------------------------------------------
+
+		if self.ui.data_type_comboBox.currentText() == 'file' and self.ui.add_mode_comboBox.currentText() == 'const' :
+			self.ui.label_16.setText('File path')
+		else :
+			self.ui.label_16.setText('Folder path')
 	#________________________________________________
 	def doitAction(self):
 
@@ -138,16 +157,32 @@ class AddaDialog(QDialog):
 			self.max = (self.ui.c_max_r_doubleSpinBox.value(),
 						self.ui.c_max_g_doubleSpinBox.value(),
 						self.ui.c_max_b_doubleSpinBox.value())
-		
+		elif self.dataType == 'file':
+			self.dv = self.ui.path_lineEdit_2.text()
+			self.min_max = ('file', self.dv)
+
+		else:
+			self.dv = 0
+			self.min_max = 'none'
+			
 		if self.ui.min_max_checkBox.isChecked() == True :
 			self.min_max = (self.min,self.max)
 		else :
-			self.min_max = "none"
+			self.min_max = 'none'
+
+		if self.dataType == 'file':
+			self.dv = self.ui.path_lineEdit_2.text()
+			self.min_max = ('file', self.dv)
 
 		adda.batchAddAttr(self.dataType,
 						  self.ui.attr_name_lineEdit.text(),
 						  self.dv , self.ui.add_mode_comboBox.currentText(),
 						  self.min_max, self.ui.arnold_checkBox.isChecked())
+		
+	#________________________________________________
+
+	def doieAction_2(self):
+		adda.deleteAttr(self.ui.del_name_lineEdit_3.text())		
 		
 #========================================================		
 if __name__ == '__main__':
